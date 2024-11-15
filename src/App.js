@@ -1,10 +1,16 @@
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AppNavigator from "./components/AppNavigator";
+import Pokefight from "./containers/Pokefight";
 
 function App() {
   return (
-    <div className="App">
-      Poke Fight Here!
-    </div>
+    <Router>
+      <AppNavigator /> 
+      <Routes>               
+        <Route path="/" element={<Pokefight/>} />
+      </Routes>
+    </Router>
+    
   );
 }
 
