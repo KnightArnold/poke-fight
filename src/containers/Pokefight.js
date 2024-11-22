@@ -4,6 +4,7 @@ import axios from "axios";
 import { IMAGE_API_URL, POKEMON_API_URL } from "../config";
 import PokemonCard from '../components/PokemonCard';
 import { makeStyles } from "@mui/styles";
+import { useLocalStorage } from "../customhooks/useLocalStorage";
 
 const useStyles = makeStyles((theme) => ({
   pokefightContainer: {
@@ -14,8 +15,10 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function Pokefight() {
+    const { setItem } = useLocalStorage('pokemonData');  
     const classes = useStyles();
     const [pokemonData, setPokemonData] = useState(null);
+    
     useEffect(() => {
         axios.get(POKEMON_API_URL + "?limit=800").then((response) => {
           if(response.status >= 200 && response.status < 300) {
@@ -26,14 +29,22 @@ export default function Pokefight() {
               let pokemonObject = {
                 id: index,
                 url: IMAGE_API_URL + index + '.png',
-                name: pokemon.name
+                name: pokemon.name,
+                rankingTop: index
               }
               newPokemonData.push(pokemonObject);
             });
             setPokemonData(newPokemonData);
           }
         })
+        .finally( () => {            
+                        
+        });
     }, []);
+    
+    if (pokemonData) {
+      setItem(pokemonData?.filter((r, i) => i < 10));
+    }
     
     return (
     <Box>
@@ -41,7 +52,7 @@ export default function Pokefight() {
           <Grid2 className={classes.pokefightContainer} container spacing= {2}>
           {pokemonData.map((pokemon) => {
             return (
-              <PokemonCard key={pokemon.id} pokemon={pokemon} image={pokemon.url}/>
+              <PokemonCard key={pokemon.id} pokemon={pokemon} image={pokemon.url} isRanking = {false}/>
             )
           })}
         </Grid2>
