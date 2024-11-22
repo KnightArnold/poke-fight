@@ -4,8 +4,8 @@ import { useParams } from "react-router-dom";
 import { POKEMON_API_URL } from "../config";
 import { makeStyles } from "@mui/styles";
 import { Box, Button, CircularProgress, Grid2, Typography } from '@mui/material';
-import { Favorite } from '@mui/icons-material';
-
+import { Link } from "react-router-dom";
+import { useLocalStorage } from "../customhooks/useLocalStorage";
 
 const useStyles = makeStyles((theme) => ({
     pokefightContainer: {
@@ -43,59 +43,70 @@ const useStyles = makeStyles((theme) => ({
     text: {
         fontSize: 30,
         marginLeft: '200px !important'
+    },
+    link: {
+        textDecoration: 'none !important'
     }
   }))
 
 export default function PokemonDetails() {
+    const { setItem } = useLocalStorage('pokemonSelected');
     const classes = useStyles();
     const { id } = useParams();
-    const [pokemonData, setPokemonData] = useState(null);
+    const [pokemonSelected, setPokemonSelected] = useState(null);
     useEffect(() => {
         axios.get(POKEMON_API_URL + "/" + id).then((response) => {
             if(response.status >= 200 && response.status < 300) {                
-                setPokemonData(response.data);
+                setPokemonSelected(response.data);
             }
         })
     }, []);
 
+    if (pokemonSelected) {
+        setItem(pokemonSelected);
+    }
+
   return (
     <Box>
-        {pokemonData ? (
+        {pokemonSelected ? (
             <Box className={classes.pokefightContainer}>
                 <Typography className={classes.textTitle} variant="h1">
-                    {pokemonData.name}
+                    {pokemonSelected.name}
                 </Typography>
-                <img className={classes.pokemonImage} src={pokemonData.sprites.front_default}/>                
+                <img className={classes.pokemonImage} src={pokemonSelected.sprites.front_default}/>                
                 <Box className={classes.pokemonInfoContainer}>
                     <hr className={classes.separator} />
                     <Grid2 container>
                         <Grid2 md={1}>
-                            <Button className={classes.favourite}>
-                                <Favorite style={{ color: "white", fontSize: 35 }} />
-                            </Button>
+                            <Link to={"/battle/"} className={classes.link}>
+                                <Button className={classes.favourite}>
+                                    Comenzar desafio
+                                </Button>
+                            </Link>
+                            
                         </Grid2>
                         <Grid2 md={2}>
                             <Typography className={classes.text}>
                                 Name
                                 <br />
-                                {pokemonData.name}
+                                {pokemonSelected.name}
                             </Typography>
                         </Grid2>
                         <Grid2 md={2}>
                             <Typography className={classes.text}>
                                 Height
                                 <br />
-                                {pokemonData.height}m
+                                {pokemonSelected.height}m
                             </Typography>
                         </Grid2>
                         <Grid2 md={2}>
                             <Typography className={classes.text}>
                                 Weight
                                 <br />
-                                {pokemonData.weight}kg
+                                {pokemonSelected.weight}kg
                             </Typography>
                         </Grid2>
-                        {pokemonData.types.map((pokemonType) => {                            
+                        {pokemonSelected.types.map((pokemonType) => {                            
                             const { name } = pokemonType.type;
                             return (
                                 <Grid2 md={2}>
