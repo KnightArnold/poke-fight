@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PokemonCard(props) {
     const classes = useStyles();
-    const { pokemon, image } = props
+    const { pokemon, image, isRanking, rankingTop } = props
     const { id, name } = pokemon
   return (
     <Grid2 xs={12} sm={2} key={id}>
@@ -38,6 +38,7 @@ export default function PokemonCard(props) {
                     <Typography>
                         {name}
                     </Typography>
+                    {isRanking && <Typography>Top: {rankingTop}</Typography>}
                 </CardContent>
             </Card>
         </Link>        

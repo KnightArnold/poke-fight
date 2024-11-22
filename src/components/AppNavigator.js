@@ -13,6 +13,10 @@ const useStyles = makeStyles((theme) => ({
  title: {
     cursor: 'pointer',
     color: 'white'
+ },
+ ranking: {
+    marginLeft: '20px',
+    textDecoration: 'none !important',
  }
 }))
 
@@ -23,6 +27,9 @@ export default function AppNavigator() {
         <Toolbar>
             <Link to='/' className={classes.link}>
                 <Typography className={classes.title} variant="h6">Lista de Pokemones</Typography>
+            </Link>
+            <Link to='/ranking/' className={classes.ranking}>
+                <Typography className={classes.title} variant="h6">Ranking</Typography>
             </Link>
         </Toolbar>
     </AppBar>
