@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export default function Pokefight() {
-    const { setItem } = useLocalStorage('pokemonData');  
+    const { getItem, setItem } = useLocalStorage('pokemonData');  
     const classes = useStyles();
     const [pokemonData, setPokemonData] = useState(null);
     
@@ -30,7 +30,7 @@ export default function Pokefight() {
                 id: index,
                 url: IMAGE_API_URL + index + '.png',
                 name: pokemon.name,
-                rankingTop: index
+                points: 0
               }
               newPokemonData.push(pokemonObject);
             });
@@ -42,7 +42,7 @@ export default function Pokefight() {
         });
     }, []);
     
-    if (pokemonData) {
+    if (pokemonData && !getItem()) {
       setItem(pokemonData?.filter((r, i) => i < 10));
     }
     
